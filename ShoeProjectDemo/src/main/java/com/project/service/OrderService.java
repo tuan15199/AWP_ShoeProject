@@ -163,17 +163,16 @@ public class OrderService {
 		List<String> resultList = new ArrayList<String>();
 		List<TopCustomersDto> customerList = new ArrayList<>();
 		resultList = orderRepo.getTopPhone(top);
-		for(String phone: resultList) {
-//			phoneList.add(phone.split(",")[0]);
+		for (String phone : resultList) {
 			List<Orders> orders = orderRepo.findByPhone(phone.split(",")[0]);
 			TopCustomersDto customer = new TopCustomersDto();
 			customer.setFirstName(orders.get(0).getFirstName());
 			customer.setLastName(orders.get(0).getLastName());
 			customer.setEmail(orders.get(0).getEmail());
-			customer.setPhone(phone);
+			customer.setPhone(phone.split(",")[0]);
 			customer.setTotalPayment(Double.parseDouble((phone.split(",")[1])));
 			customerList.add(customer);
-	}
+		}
 		return customerList;
 	}
 
