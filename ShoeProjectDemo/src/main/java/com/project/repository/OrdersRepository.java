@@ -40,11 +40,19 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer>{
 	@Query(value = "SELECT * FROM orders WHERE status = :status", nativeQuery = true)
 	List<Orders> getOrderByStatus(int status);
 	
-//	@Query(value = "SELECT first_name, last_name, phone, email, sum(total_price) FROM shoeappdemo.orders WHERE status = 3 GROUP BY first_name, last_name, phone, email ORDER BY sum(total_price) desc LIMIT 2", nativeQuery = true)
-//	List<Object> getTopCustomers(int top);
+	@Query(value = "SELECT phone, sum(total_price) FROM shoeappdemo.orders "
+			+ "WHERE order_date between :fromDate and :toDate and status = 3"
+			+ " GROUP BY phone ORDER BY sum(total_price) desc LIMIT :top", nativeQuery = true)
+	List<String> getTopCustomer(int top, String fromDate, String toDate);
 	
-	@Query(value = "SELECT phone, sum(total_price) FROM shoeappdemo.orders WHERE status = 3 GROUP BY phone ORDER BY sum(total_price) desc LIMIT :top", nativeQuery = true)
-	List<String> getTopPhone(int top);
+	@Query(value = "SELECT p.name as proName, b.name as brandName, sum(od.total_price) " + 
+			"FROM order_detail od join product_detail pd on od.product_id = pd.id join orders o on o.id = od.order_id " + 
+			"join product p on p.id = pd.product_id join brand b on b.id = p.brand_id " + 
+			"WHERE o.order_date between :fromDate and :toDate and o.status = 3 " + 
+			"GROUP BY p.name, b.name, od.product_id " + 
+			"ORDER BY sum(od.total_price) desc " + 
+			"LIMIT :top", nativeQuery = true)
+	List<String> getTopProduct(int top, String fromDate, String toDate);
 	
 	List<Orders> findByPhone(String phone);
 }

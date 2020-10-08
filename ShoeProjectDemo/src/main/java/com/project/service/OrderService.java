@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.project.dtos.OrderDto;
 import com.project.dtos.OrderReturn;
 import com.project.dtos.TopCustomersDto;
+import com.project.dtos.TopProductDto;
 import com.project.exception.DataNotFoundException;
 import com.project.model.OrderDetail;
 import com.project.model.OrderStatus;
@@ -159,10 +160,10 @@ public class OrderService {
 		return orderRepo.save(order);
 	}
 
-	public List<TopCustomersDto> getTopCustomers(int top) {
+	public List<TopCustomersDto> getTopCustomers(int top, String fromDate, String toDate) {
 		List<String> resultList = new ArrayList<String>();
 		List<TopCustomersDto> customerList = new ArrayList<>();
-		resultList = orderRepo.getTopPhone(top);
+		resultList = orderRepo.getTopCustomer(top, fromDate, toDate);
 		for (String phone : resultList) {
 			List<Orders> orders = orderRepo.findByPhone(phone.split(",")[0]);
 			TopCustomersDto customer = new TopCustomersDto();
@@ -174,6 +175,21 @@ public class OrderService {
 			customerList.add(customer);
 		}
 		return customerList;
+	}
+	
+	public List<TopProductDto> getTopProduct(int top, String fromDate, String toDate) {
+		List<String> resultList = new ArrayList<String>();
+		resultList = orderRepo.getTopProduct(top, fromDate, toDate);
+		List<TopProductDto> productList = new ArrayList<>();
+		
+		for (String pro : resultList) {
+			TopProductDto product = new TopProductDto();
+			product.setProduct(pro.split(",")[0]);
+			product.setBrand(pro.split(",")[1]);
+			product.setTotalSold(Double.parseDouble(pro.split(",")[2]));
+			productList.add(product);
+		}
+		return productList;
 	}
 
 }

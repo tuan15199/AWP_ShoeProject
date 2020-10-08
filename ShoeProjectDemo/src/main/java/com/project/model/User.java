@@ -1,11 +1,11 @@
 package com.project.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,40 +23,17 @@ import lombok.Setter;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	  @GeneratedValue(strategy = GenerationType.IDENTITY)
+	  private Integer id;
 
-	@Column(nullable = false)
-	private String username;
+	  @Column(unique = true, nullable = false)
+	  private String username;
 
-	@Column(nullable = false, length = 100)
-	private String password;
+	  @Column(unique = true, nullable = false)
+	  private String email;
+	  private String password;
 
-	private int active;
+	  @ElementCollection(fetch = FetchType.EAGER)
+	  List<Role> roles;
 
-	private Role roles;
-
-	private String permissions = "";
-
-	public User(String username, String password, Role roles, String permissions) {
-		this.username = username;
-		this.password = password;
-		this.roles = roles;
-		this.permissions = permissions;
-		this.active = 1;
 	}
-
-	public List<String> getRoleList() {
-		if (Role.values().length > 0) {
-			return Arrays.asList(Role.ADMIN.name(), Role.USER.name());
-		}
-		return new ArrayList<>();
-	}
-
-	public List<String> getPermissionList() {
-		if (this.permissions.length() > 0) {
-			return Arrays.asList(this.permissions.split(","));
-		}
-		return new ArrayList<>();
-	}
-}

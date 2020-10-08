@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.dtos.OrderDto;
 import com.project.dtos.OrderReturn;
 import com.project.dtos.TopCustomersDto;
-import com.project.model.OrderStatus;
+import com.project.dtos.TopProductDto;
 import com.project.model.Orders;
 import com.project.service.OrderService;
 
@@ -99,7 +99,12 @@ public class OrderController {
 	}
 	
 	@GetMapping(value = "topCustomers")
-	public List<TopCustomersDto> findTopCustomers(@RequestParam int top){
-		return service.getTopCustomers(top);
+	public List<TopCustomersDto> getTopCustomers(@RequestParam int top, @RequestParam String fromDate, @RequestParam String toDate){
+		return service.getTopCustomers(top, fromDate, toDate);
+	}
+	
+	@GetMapping(value = "topProducts")
+	public List<TopProductDto> getTopProducts(@RequestParam int top, @RequestParam String fromDate, @RequestParam String toDate){
+		return service.getTopProduct(top, fromDate, toDate);
 	}
 }
