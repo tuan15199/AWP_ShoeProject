@@ -24,6 +24,12 @@ public class BrandController {
 		logger.info("Show all brand!");
 		return service.getAll();
 	}
+	
+	@GetMapping(value = "/brandss")
+	public ObjectReturn<Brand> getAlll() {
+		logger.info("Show all brand!");
+		return service.getAll();
+	}
 
 //	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping(value = "/brand", consumes = "application/json")
