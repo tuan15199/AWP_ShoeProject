@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,29 +36,33 @@ import io.swagger.annotations.Authorization;
 @Api(tags = "users")
 public class UserController {
 
-  @Autowired
-  private UserService userService;
+	@Autowired
+	private UserService userService;
 
-  @Autowired
-  private ModelMapper modelMapper;
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	private Logger logger = LoggerFactory.getLogger(UserController.class);
 
-  @PostMapping("/signin")
-  @ApiOperation(value = "${UserController.signin}")
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 422, message = "Invalid username/password supplied")})
-  public Token login(@RequestBody LoginViewModel user) {
-    return userService.signin(user);
-  }
+	@PostMapping("/signin")
+	@ApiOperation(value = "${UserController.signin}")
+	@ApiResponses(value = { //
+			@ApiResponse(code = 400, message = "Something went wrong"), //
+			@ApiResponse(code = 422, message = "Invalid username/password supplied") })
+	public Token login(@RequestBody LoginViewModel user) {
+		logger.info("User accessed successfully!");
+		return userService.signin(user);
+	}
 
-  @PostMapping("/signup")
-  @ApiOperation(value = "${UserController.signup}")
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 422, message = "Username is already in use")})
-  public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
-    return userService.signup(modelMapper.map(user, User.class));
-  }
+	@PostMapping("/signup")
+	@ApiOperation(value = "${UserController.signup}")
+	@ApiResponses(value = { //
+			@ApiResponse(code = 400, message = "Something went wrong"), //
+			@ApiResponse(code = 403, message = "Access denied"), //
+			@ApiResponse(code = 422, message = "Username is already in use") })
+	public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
+		logger.info("User sign up successfully!");
+		return userService.signup(modelMapper.map(user, User.class));
+	}
 
 }
